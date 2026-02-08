@@ -160,6 +160,7 @@
 
         #btn-yes {
             position: relative;
+            z-index: 3000;
         }
 
         #btn-no {
@@ -168,6 +169,7 @@
             border: none;
             transition: top 0.2s ease, left 0.2s ease;
             position: relative;
+            z-index: 1000;
         }
 
         .smoke-particle {
@@ -421,6 +423,10 @@
             const runAway = (e) => {
                 if (e) e.preventDefault();
                 fuiteCount++;
+
+                // Agrandir le bouton Oui
+                const currentScale = 1 + (fuiteCount * 0.2);
+                btnYes.style.transform = `scale(${currentScale})`;
 
                 if (fuiteCount > messagesFuite.length - 1) {
                     const rect = btnNo.getBoundingClientRect();
