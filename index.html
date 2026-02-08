@@ -440,7 +440,7 @@
                 const maxX = viewportW - btnW - marginSide;
                 const maxY = viewportH - btnH - marginBottom;
 
-                let newX, newY, isOverlapping = true, attempts = 50;
+                let newX, newY, isOverlapping = true, attempts = 0;
 
                 if (maxX < marginSide || maxY < marginTop) {
                     newX = marginSide; newY = marginTop; isOverlapping = false;
