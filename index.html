@@ -322,9 +322,9 @@
             <p id="yes-body">...</p>
 
             <div class="ticket">
-                <img src="puppy1.png" class="puppy-sticker"
+                <img src="puppy1.png" class="puppy-sticker hidden fade-in"
                     style="left: -10px; bottom: -10px; transform: rotate(10deg);">
-                <img src="puppy2.png" class="puppy-sticker"
+                <img src="puppy2.png" class="puppy-sticker hidden fade-in"
                     style="right: -10px; bottom: -10px; transform: rotate(-10deg);">
 
                 <h3>Invitation Officielle</h3>
@@ -440,7 +440,7 @@
                 const maxX = viewportW - btnW - marginSide;
                 const maxY = viewportH - btnH - marginBottom;
 
-                let newX, newY, isOverlapping = true, attempts = 0;
+                let newX, newY, isOverlapping = true, attempts = 50;
 
                 if (maxX < marginSide || maxY < marginTop) {
                     newX = marginSide; newY = marginTop; isOverlapping = false;
@@ -468,6 +468,12 @@
             document.getElementById('reveal-btn').addEventListener('click', function () {
                 const details = document.getElementById('details-collapse');
                 details.classList.remove('hidden'); details.classList.add('fade-in');
+
+                // Révéler les chiots
+                document.querySelectorAll('.puppy-sticker').forEach(el => {
+                    el.classList.remove('hidden');
+                });
+
                 this.style.display = 'none';
             });
             document.getElementById('cal-apple').addEventListener('click', addToAppleCalendar);
