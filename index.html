@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Une question pour toi...</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Pacifico&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-gradient: radial-gradient(circle at center, #ffdde1 0%, #ee9ca7 100%);
+            --color-primary: #e91e63;
+            --color-text: #4a4a4a;
+            --color-white: #ffffff;
+            --font-title: 'Pacifico', cursive;
+            --font-body: 'Nunito', sans-serif;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --shadow: 0 10px 40px rgba(233, 30, 99, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text);
+            background: #ffdde1;
+            background: linear-gradient(to right, #ee9ca7, #ffdde1);
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        main {
+            width: 90%;
+            max-width: 450px;
+            z-index: 10;
+            padding: 20px 0;
+            opacity: 0;
+            animation: fadeInPage 1s ease-out forwards;
+        }
+
+        @keyframes fadeInPage {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid var(--color-white);
+            border-radius: 30px;
+            padding: 30px 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            font-family: var(--font-title);
+            color: var(--color-primary);
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.5);
+        }
+
+        h3 {
+            font-family: var(--font-title);
+            color: var(--color-primary);
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .intro-text {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #888;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+            min-height: 80px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            min-width: 100px;
+            white-space: nowrap;
+            max-width: 85vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            background: #d81b60;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+        }
+
+        #btn-no {
+            background: #eee;
+            color: #777;
+            border: none;
+            transition: top 0.2s ease, left 0.2s ease;
+            position: relative;
+        }
+
+        .smoke-particle {
+            position: fixed;
+            background: #ccc;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2000;
+            opacity: 0.8;
+            animation: smokeMove 0.6s ease-out forwards;
+        }
+
+        @keyframes smokeMove {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(3);
+                opacity: 0;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.9);
+            pointer-events: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ticket {
+            border: 3px dashed var(--color-primary);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            background: #fff;
+            position: relative;
+        }
+
+        .details-content {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #f0f0f0;
+            text-align: left;
+        }
+
+        .detail-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .detail-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .calendar-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .photo-frame {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: rotate(-3deg);
+            margin: 0 auto 20px auto;
+            max-width: 80%;
+            width: 250px;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            display: block;
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            background: #f8f8f8;
+            color: #555;
+            border: 1px solid #ddd;
+            box-shadow: none;
+            text-decoration: none;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 10px;
+            font-size: 0.8rem;
+            color: #fff;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            opacity: 0.8;
+        }
+
+        .puppy-sticker {
+            position: absolute;
+            width: 80px;
+            height: auto;
+            z-index: 10;
+            pointer-events: none;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <main>
+        <!-- LANDING -->
+        <section id="landing-view" class="card">
+            <div class="photo-frame">
+                <img src="img_6884.jpg" alt="Nous">
+            </div>
+            <div class="intro-text" id="intro-line">...</div>
+            <h1 id="main-question">...</h1>
+            <div class="btn-group">
+                <button class="btn-primary" id="btn-yes">Oui ❤️</button>
+                <button id="btn-no">Non</button>
+            </div>
+        </section>
+
+        <!-- SUCCÈS -->
+        <section id="success-view" class="card hidden">
+            <h1 id="yes-title">...</h1>
+            <p id="yes-body">...</p>
+
+            <div class="ticket">
+                <h3>Invitation Officielle</h3>
+                <p>Rendez-vous le 15 Février</p>
+                <button class="btn-secondary btn-small" id="reveal-btn" style="width:100%; margin-top:10px;">
+                    Voir la surprise ✨
+                </button>
+
+                <div id="details-collapse" class="hidden details-content" style="position: relative;">
+                    <img src="puppy1.png" class="puppy-sticker"
+                        style="left: -15px; top: -25px; transform: rotate(-15deg);">
+                    <img src="puppy2.png" class="puppy-sticker"
+                        style="right: -15px; top: -25px; transform: rotate(15deg);">
+
+                    <div class="detail-item"><span class="detail-icon">📅</span><strong>Date :&nbsp;</strong> 15 Février
+                        2026</div>
+                    <div class="detail-item"><span class="detail-icon">📍</span><span id="place-text">...</span></div>
+                    <div class="detail-item"><span class="detail-icon">⏰</span><span id="time-text">...</span></div>
+
+                    <div class="calendar-actions">
+                        <button id="cal-apple" class="btn-small">Ajouter à l'Agenda 🍎</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const CONFIG = {
+            introLine: "J'ai une petite question...",
+            mainQuestion: "Veux-tu être ma Valentine ?",
+            yesMessageTitle: "Trop bien !",
+            yesMessageBody: "Prépare-toi pour une dose de mignonnerie !",
+            dinnerDate: "2026-02-15",
+            dinnerTime: "17:00",
+            dinnerPlace: "Puppy Yoga Paris",
+            calendarTitle: "Saint-Valentin : Puppy Yoga 🐶",
+            calendarDescription: "Séance de yoga avec des bébés chiots ! ❤️"
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initText(); initEvents(); initBackground(); initPuppies();
+        });
+
+        function initText() {
+            setText('intro-line', CONFIG.introLine);
+            setText('main-question', CONFIG.mainQuestion);
+            setText('yes-title', CONFIG.yesMessageTitle);
+            setText('yes-body', CONFIG.yesMessageBody);
+            setText('place-text', CONFIG.dinnerPlace);
+            setText('time-text', CONFIG.dinnerTime.replace(':', 'h'));
+        }
+
+        function setText(id, text) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = text;
+        }
+
+        function initPuppies() {
+            const puppies = ['🐶', '🐕', '🐩', '🐾'];
+            const container = document.body;
+
+            setInterval(() => {
+                if (document.hidden) return;
+                const p = document.createElement('div');
+                p.textContent = puppies[Math.floor(Math.random() * puppies.length)];
+                p.style.position = 'fixed';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.top = '-50px';
+                p.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                p.style.zIndex = '5';
+                p.style.opacity = '0.6';
+                p.style.pointerEvents = 'none';
+                p.style.transition = 'top 5s linear, opacity 5s ease-in';
+                container.appendChild(p);
+
+                setTimeout(() => {
+                    p.style.top = '110vh';
+                    p.style.opacity = '0';
+                }, 100);
+
+                setTimeout(() => { p.remove(); }, 5100);
+            }, 2000);
+        }
+
+        function initEvents() {
+            document.getElementById('btn-yes').addEventListener('click', handleYes);
+            const btnNo = document.getElementById('btn-no');
+            const btnYes = document.getElementById('btn-yes');
+
+            let fuiteCount = 0;
+            const messagesFuite = ["Non", "Tu es sûr ?", "Vraiment ?", "Pense-y bien...", "Dernière chance !", "Allez...", "Sois sympa !"];
+
+            const runAway = (e) => {
+                if (e) e.preventDefault();
+                fuiteCount++;
+
+                // Agrandir le bouton Oui
+                const currentScale = 1 + (fuiteCount * 0.2);
+                btnYes.style.transform = `scale(${currentScale})`;
+
+                if (fuiteCount > messagesFuite.length - 1) {
+                    const rect = btnNo.getBoundingClientRect();
+                    createCartoonSmoke(rect.left + rect.width / 2, rect.top + rect.height / 2);
+                    btnNo.style.display = 'none';
+                    return;
+                }
+                btnNo.textContent = messagesFuite[fuiteCount];
+
+                const viewportW = document.documentElement.clientWidth || window.innerWidth;
+                const viewportH = document.documentElement.clientHeight || window.innerHeight;
+                const btnW = btnNo.offsetWidth;
+                const btnH = btnNo.offsetHeight;
+                const yesRect = btnYes.getBoundingClientRect();
+
+                const marginSide = 20; const marginTop = 20; const marginBottom = 150;
+                const maxX = viewportW - btnW - marginSide;
+                const maxY = viewportH - btnH - marginBottom;
+
+                let newX, newY, isOverlapping = true, attempts = 0;
+
+                if (maxX < marginSide || maxY < marginTop) {
+                    newX = marginSide; newY = marginTop; isOverlapping = false;
+                } else {
+                    while (isOverlapping && attempts < 50) {
+                        newX = Math.random() * (maxX - marginSide) + marginSide;
+                        newY = Math.random() * (maxY - marginTop) + marginTop;
+                        const noRect = { left: newX, right: newX + btnW, top: newY, bottom: newY + btnH };
+                        const safetyGap = 20;
+                        const intersect = !(noRect.right + safetyGap < yesRect.left || noRect.left > yesRect.right + safetyGap || noRect.bottom + safetyGap < yesRect.top || noRect.top > yesRect.bottom + safetyGap);
+                        if (!intersect) isOverlapping = false;
+                        attempts++;
+                    }
+                }
+                newX = Math.max(marginSide, Math.min(newX, maxX));
+                newY = Math.max(marginTop, Math.min(newY, maxY));
+
+                btnNo.style.position = 'fixed'; btnNo.style.left = `${newX}px`; btnNo.style.top = `${newY}px`; btnNo.style.zIndex = '1000';
+            };
+
+            btnNo.addEventListener('mouseover', runAway);
+            btnNo.addEventListener('touchstart', runAway);
+            btnNo.addEventListener('click', runAway);
+
+            document.getElementById('reveal-btn').addEventListener('click', function () {
+                const details = document.getElementById('details-collapse');
+                details.classList.remove('hidden'); details.classList.add('fade-in');
+                this.style.display = 'none';
+            });
+            document.getElementById('cal-apple').addEventListener('click', addToAppleCalendar);
+        }
+
+        function createCartoonSmoke(x, y) {
+            for (let i = 0; i < 8; i++) {
+                const span = document.createElement('span');
+                span.classList.add('smoke-particle');
+                const size = Math.random() * 30 + 20;
+                span.style.width = `${size}px`; span.style.height = `${size}px`;
+                span.style.left = `${x - size / 2}px`; span.style.top = `${y - size / 2}px`;
+                const angle = Math.random() * 2 * Math.PI;
+                const velocity = Math.random() * 80 + 40;
+                span.style.setProperty('--tx', `${Math.cos(angle) * velocity}px`);
+                span.style.setProperty('--ty', `${Math.sin(angle) * velocity}px`);
+                document.body.appendChild(span);
+                setTimeout(() => { span.remove(); }, 600);
+            }
+        }
+
+        function handleYes() {
+            const landing = document.getElementById('landing-view');
+            const success = document.getElementById('success-view');
+            document.getElementById('btn-no').style.display = 'none';
+            landing.classList.add('fade-out');
+            setTimeout(() => {
+                landing.classList.add('hidden'); success.classList.remove('hidden'); success.classList.add('fade-in');
+                window.triggerConfetti();
+            }, 300);
+        }
+
+        function getDates() {
+            const startStr = `${CONFIG.dinnerDate}T${CONFIG.dinnerTime}:00`;
+            const startDate = new Date(startStr);
+            const endDate = new Date(startDate.getTime() + (2 * 60 * 60 * 1000));
+            const format = (date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+            return { start: format(startDate), end: format(endDate) };
+        }
+
+        function addToAppleCalendar() {
+            const dates = getDates();
+            // Construction du fichier ICS standard
+            const icsContent = [
+                'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Amour//SaintValentin//FR',
+                'BEGIN:VEVENT', `UID:${Date.now()}@love.app`,
+                `DTSTAMP:${dates.start}`, `DTSTART:${dates.start}`, `DTEND:${dates.end}`,
+                `SUMMARY:${CONFIG.calendarTitle}`, `DESCRIPTION:${CONFIG.calendarDescription}`,
+                `LOCATION:${CONFIG.dinnerPlace}`, 'END:VEVENT', 'END:VCALENDAR'
+            ].join('\r\n');
+
+            // --- ASTUCE POUR IPHONE ---
+            // Au lieu de créer un blob (qui force le téléchargement dans Fichiers),
+            // on utilise un Data URI avec window.location.
+            // Cela incite Safari iOS à "prévisualiser" l'événement et proposer "Ajouter".
+
+            const uri = 'data:text/calendar;charset=utf8,' + encodeURIComponent(icsContent);
+            window.location.href = uri;
+        }
+
+        function initBackground() {
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height, particles = [];
+
+            const resize = () => {
+                width = window.innerWidth; height = window.innerHeight;
+                canvas.width = width; canvas.height = height;
+            };
+            window.addEventListener('resize', resize); resize();
+
+            class Heart {
+                constructor(isExplosion = false) {
+                    this.x = Math.random() * width;
+                    this.y = isExplosion ? height / 2 : height + 20;
+                    this.size = Math.random() * 20 + 10;
+                    this.speedY = isExplosion ? (Math.random() * -10 - 5) : (Math.random() * -2 - 1);
+                    this.speedX = Math.random() * 2 - 1;
+                    this.rotation = Math.random() * 360;
+                    this.rotationSpeed = Math.random() * 2 - 1;
+                    this.color = `hsl(${Math.random() * 60 + 320}, 100%, 75%)`;
+                    this.opacity = Math.random() * 0.5 + 0.3;
+                    this.isExplosion = isExplosion;
+                }
+                update() {
+                    this.y += this.speedY;
+                    this.x += this.speedX + Math.sin(this.y * 0.02) * 0.5;
+                    this.rotation += this.rotationSpeed;
+                    if (this.isExplosion) { this.speedY += 0.2; this.opacity -= 0.01; }
+                    else { if (this.y < -50) { this.y = height + 50; this.x = Math.random() * width; } }
+                }
+                draw() {
+                    ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation * Math.PI / 180);
+                    ctx.globalAlpha = this.opacity; ctx.fillStyle = this.color;
+                    ctx.font = `${this.size}px Arial`; ctx.fillText("❤️", -this.size / 2, -this.size / 2);
+                    ctx.restore();
+                }
+            }
+            for (let i = 0; i < 40; i++) particles.push(new Heart(false));
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update(); particles[i].draw();
+                    if (particles[i].isExplosion && particles[i].opacity <= 0) { particles.splice(i, 1); i--; }
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+            window.triggerConfetti = () => { for (let i = 0; i < 100; i++) particles.push(new Heart(true)); };
+        }
+    </script>
+</body>
+
+</html>
